@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.urls import path
 from django.contrib import admin
-from api import views as api_views
+from core import views as core_views
 from rest_framework import routers
 
 router = routers.DefaultRouter()
@@ -25,6 +25,7 @@ urlpatterns = router.urls
 
 urlpatterns += [
     path('admin/', admin.site.urls),
-    path('', api_views.ChatGPTAPIView.as_view(), name="home"),
-    path('dataset/', api_views.DatasetAPIView.as_view()),
+    path('chat-gpt/', core_views.ChatGPTAPIView.as_view(), name="chat-gpt"),
+    path('dataset/', core_views.DatasetAPIView.as_view()),
+    path('data-query/', core_views.DataQueryAPIView.as_view())
 ]

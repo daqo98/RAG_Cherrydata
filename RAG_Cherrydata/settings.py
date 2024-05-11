@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get("SECRET_KEY")
-DEBUG = int(os.environ.get("DEBUG", default=1))
+DEBUG = int(os.environ.get("DEBUG", default=0))
 ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
 
 
@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'django_extensions', # Great packaged to access abstract models
     'django_filters', # Used with DRF
     'rest_framework', # DRF package
-    'api', # New app
+    'core', # New app
 ]
 
 MIDDLEWARE = [
@@ -151,3 +151,11 @@ REST_FRAMEWORK = {
 }
 
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
+
+# key -> value in model, value -> human-readable
+REQUEST_STATUS_CHOICES = {
+    "SUBMITTED": "Submitted",
+    "PROCESSING": "Processing",
+    "COMPLETED": "Completed",
+    "FAILED": "Failed"
+}

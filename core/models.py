@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 from utils.model_abstracts import Model, Chart
 from django_extensions.db.models import (
@@ -6,13 +7,7 @@ from django_extensions.db.models import (
 	TitleDescriptionModel
 )
 
-# key -> value in model, value -> human-readable
-REQUEST_STATUS_CHOICES = {
-    "SUBMITTED": "Submitted",
-    "PROCESSING": "Processing",
-    "COMPLETED": "Completed",
-    "FAILED": "Failed"
-}
+#TODO: User
 
 class Dataset(TimeStampedModel, Model):
 
@@ -22,7 +17,7 @@ class Dataset(TimeStampedModel, Model):
     # models.FileField(upload_to ='uploads/') # file will be uploaded to MEDIA_ROOT / uploads
     path = models.CharField(max_length=256)
     clickhouse_table_name = models.CharField(max_length=200)
-    #column_names = ArrayField(models.CharField(max_length=256))
+    #column_names = ArrayField(models.CharField(max_length=256)) TODO
     clickhouse_db_name = models.CharField(max_length=200)
     # ready = models.BooleanField()
 
@@ -37,11 +32,11 @@ class SummaryData(Model):
         primary_key=False,
     )
     
-    #metrics =  models.ArrayField(models.CharField(max_length=256))
-    #values =  models.ArrayField(models.FloatField())
+    #metrics =  models.ArrayField(models.CharField(max_length=256)) TODO
+    #values =  models.ArrayField(models.FloatField()) TODO
 
     def __str__(self):
-        return f'{self.name}'
+        return f'{self.id}' #TODO: list of metrics?
     
 class DataQuery(TimeStampedModel, ActivatorModel, Model):
 
@@ -52,11 +47,12 @@ class DataQuery(TimeStampedModel, ActivatorModel, Model):
     user_prompt = models.TextField(null=False)
     command_query = models.TextField(null=False)
     # command_chart = models.CharField(max_length=200)
-    request_status = models.CharField(max_length=10, choices=REQUEST_STATUS_CHOICES)
+    chart_type = models.CharField(max_length=10,default="pie")
+    request_status = models.CharField(max_length=10, choices=settings.REQUEST_STATUS_CHOICES)
     # Check correspondence of status field of ActivatorModel w/ functionality desired
 
     def __str__(self):
-        return f'{self.name}'
+        return f'{self.id}'
 
 class Insight(TimeStampedModel, ActivatorModel, Model):
 
@@ -67,13 +63,11 @@ class Insight(TimeStampedModel, ActivatorModel, Model):
     user_prompt = models.TextField(null=False)
     activate_context = models.BooleanField()
     gpt_response =  models.TextField(null=False)
-    request_status = models.CharField(max_length=10, choices=REQUEST_STATUS_CHOICES)
+    request_status = models.CharField(max_length=10, choices=settings.REQUEST_STATUS_CHOICES)
     # Check correspondence of status field of ActivatorModel w/ functionality desired
     
     def __str__(self):
-        return f'{self.name}'
-
-#TODO: DataExport, Chart, Summary, User
+        return f'{self.id}'
 
 class ExportTable(Model):
     class Meta:
@@ -87,10 +81,10 @@ class ExportTable(Model):
 
     file_type = models.CharField(max_length=10)
     url = models.TextField(null=False)
-    request_status = models.CharField(max_length=10, choices=REQUEST_STATUS_CHOICES)
+    request_status = models.CharField(max_length=10, choices=settings.REQUEST_STATUS_CHOICES)
 
     def __str__(self):
-        return f'{self.name}'
+        return f'{self.id}'
 
 
 class StaticChart(Chart):
@@ -104,7 +98,7 @@ class StaticChart(Chart):
     )
     
     def __str__(self):
-        return f'{self.dataset}'
+        return f'{self.id}'#TODO: List of graphs
 
 class DynamicChart(Chart):
 

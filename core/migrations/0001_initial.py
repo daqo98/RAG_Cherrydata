@@ -40,7 +40,7 @@ class Migration(migrations.Migration):
                 ('user_prompt', models.TextField()),
                 ('command_query', models.TextField()),
                 ('request_status', models.CharField(choices=[('SUBMITTED', 'Submitted'), ('PROCESSING', 'Processing'), ('COMPLETED', 'Completed'), ('FAILED', 'Failed')], max_length=10)),
-                ('dataset', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='api.dataset')),
+                ('dataset', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='core.dataset')),
             ],
             options={
                 'verbose_name_plural': 'DataQueries',
@@ -54,7 +54,7 @@ class Migration(migrations.Migration):
                 ('title_yaxis', models.CharField(max_length=50)),
                 ('chart_type', models.CharField(max_length=10)),
                 ('is_saved', models.BooleanField()),
-                ('data_query', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to='api.dataquery')),
+                ('data_query', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to='core.dataquery')),
             ],
             options={
                 'abstract': False,
@@ -67,7 +67,7 @@ class Migration(migrations.Migration):
                 ('file_type', models.CharField(max_length=10)),
                 ('url', models.TextField()),
                 ('request_status', models.CharField(choices=[('SUBMITTED', 'Submitted'), ('PROCESSING', 'Processing'), ('COMPLETED', 'Completed'), ('FAILED', 'Failed')], max_length=10)),
-                ('data_query', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to='api.dataquery')),
+                ('data_query', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to='core.dataquery')),
             ],
             options={
                 'verbose_name_plural': 'ExportTables',
@@ -86,7 +86,7 @@ class Migration(migrations.Migration):
                 ('activate_context', models.BooleanField()),
                 ('gpt_response', models.TextField()),
                 ('request_status', models.CharField(choices=[('SUBMITTED', 'Submitted'), ('PROCESSING', 'Processing'), ('COMPLETED', 'Completed'), ('FAILED', 'Failed')], max_length=10)),
-                ('dataset', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='api.dataset')),
+                ('dataset', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='core.dataset')),
             ],
             options={
                 'verbose_name_plural': 'Insights',
@@ -98,7 +98,7 @@ class Migration(migrations.Migration):
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('title_xaxis', models.CharField(max_length=50)),
                 ('title_yaxis', models.CharField(max_length=50)),
-                ('dataset', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to='api.dataset')),
+                ('dataset', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to='core.dataset')),
             ],
             options={
                 'verbose_name_plural': 'StaticCharts',
@@ -108,7 +108,7 @@ class Migration(migrations.Migration):
             name='SummaryData',
             fields=[
                 ('id', models.UUIDField(default=uuid.uuid4, primary_key=True, serialize=False)),
-                ('dataset', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to='api.dataset')),
+                ('dataset', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to='core.dataset')),
             ],
             options={
                 'abstract': False,
