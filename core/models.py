@@ -7,7 +7,6 @@ from django_extensions.db.models import (
 	ActivatorModel,
 	TitleDescriptionModel
 )
-from django.utils import timezone
 
 #TODO: User
 
@@ -20,9 +19,10 @@ class Dataset(Model):
     modified = models.DateTime64Field(auto_now=True)
     # models.FileField(upload_to ='uploads/') # file will be uploaded to MEDIA_ROOT / uploads
     path = models.FixedStringField(max_bytes=256)
-    clickhouse_table_name = models.FixedStringField(max_bytes=200)
-    #column_names = ArrayField(models.FixedStringField(max_bytes=256)) TODO
     clickhouse_db_name = models.FixedStringField(max_bytes=200)
+    clickhouse_table_name = models.FixedStringField(max_bytes=200)
+    column_names = models.ArrayField(base_field=models.FixedStringField(max_bytes=256), default=list)
+    context = models.StringField(null=False, default="")
     # ready = models.BoolField()
 
     def __str__(self):
@@ -36,8 +36,8 @@ class SummaryData(Model):
         primary_key=False,
     )
     
-    #metrics =  models.ArrayField(models.FixedStringField(max_bytes=256)) TODO
-    #values =  models.ArrayField(models.FloatField()) TODO
+    metrics =  models.ArrayField(base_field=models.FixedStringField(max_bytes=256), default=list)
+    values =  models.ArrayField(base_field=models.Float64Field(), default=list)
 
     def __str__(self):
         return f'{self.id}' #TODO: list of metrics?
@@ -52,9 +52,8 @@ class DataQuery(Model):
     user_prompt = models.StringField(null=False)
     command_query = models.StringField(null=False)
     # command_chart = models.FixedStringField(max_bytes=200)
-    chart_type = models.FixedStringField(max_bytes=10,default="pie")
+    chart_type = models.FixedStringField(max_bytes=10, default="pie")
     request_status = models.FixedStringField(max_bytes=10, choices=settings.REQUEST_STATUS_CHOICES)
-    # Check correspondence of status field of ActivatorModel w/ functionality desired
 
     def __str__(self):
         return f'{self.id}'
@@ -67,10 +66,9 @@ class Insight(Model):
     created = models.DateTime64Field(auto_now_add=True)
     dataset = django_models.ForeignKey(Dataset, on_delete=django_models.CASCADE)
     user_prompt = models.StringField(null=False)
-    activate_context = models.BoolField()
+    activate_context = models.BoolField(default=False) #TODO
     gpt_response =  models.StringField(null=False)
     request_status = models.FixedStringField(max_bytes=10, choices=settings.REQUEST_STATUS_CHOICES)
-    # Check correspondence of status field of ActivatorModel w/ functionality desired
     
     def __str__(self):
         return f'{self.id}'

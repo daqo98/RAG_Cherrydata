@@ -1,7 +1,7 @@
 from json import JSONDecodeError
 from django.conf import settings
 from django.http import JsonResponse
-from .serializers import DatasetSerializer, DataQuerySerializer
+from .serializers import DatasetSerializer, DataQuerySerializer, InsightSerializer
 from rest_framework.parsers import JSONParser
 from rest_framework import views, status
 from rest_framework.response import Response
@@ -36,12 +36,10 @@ class DatasetAPIView(views.APIView):
 
 
 class ChatGPTAPIView(views.APIView):
-    def post(self, request):
+    def post(self, request): #TODO: GET???
         # Extract the prompt from the request data
-        prompt = request.data.get("prompt", "")
-        print(prompt)
-
-        prompt = "What is Retrieval Augmented Generation?"
+        data = JSONParser().parse(request)
+        prompt = data.get("prompt", "")
         print(prompt)
 
         # Check if prompt is provided
@@ -50,7 +48,8 @@ class ChatGPTAPIView(views.APIView):
 
         # Call the ChatGPT API
         try:
-            response = self.generate_response(prompt)
+            #response = self.generate_response(prompt)
+            response = "Rome"
             return Response({"response": response}, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -86,6 +85,30 @@ class DataQueryAPIView(views.APIView):
                 serializer.save()
                 print(f"serializer data {serializer.data}")
                 # TODO: Make async call to Chat-GPT and handle request_status case
+                return Response(serializer.data)
+            else:
+                print(f"serializer errors {serializer.errors}")
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except JSONDecodeError:
+            return JsonResponse({"result": "error","message": "Json decoding error"}, status= 400)
+
+class InsightAPIView(views.APIView):
+    """
+    A simple APIView for creating Insight entries.
+    """
+    serializer_class = InsightSerializer
+
+    def get_serializer(self, *args, **kwargs):
+        kwargs['context'] = self.get_serializer_context()
+        return self.serializer_class(*args, **kwargs)
+
+    def post(self, request):
+        try:
+            data = JSONParser().parse(request)
+            serializer = self.serializer_class(data=data)
+            if serializer.is_valid(raise_exception=True):
+                serializer.save()
+                print(f"serializer data {serializer.data}")
                 return Response(serializer.data)
             else:
                 print(f"serializer errors {serializer.errors}")

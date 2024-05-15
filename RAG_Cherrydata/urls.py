@@ -27,5 +27,6 @@ urlpatterns += [
     path('admin/', admin.site.urls),
     path('chat-gpt/', core_views.ChatGPTAPIView.as_view(), name="chat-gpt"),
     path('dataset/', core_views.DatasetAPIView.as_view()),
-    path('data-query/', core_views.DataQueryAPIView.as_view())
+    path('data-query/', core_views.DataQueryAPIView.as_view()),
+    path('insight-query/', core_views.InsightAPIView.as_view())
 ]
