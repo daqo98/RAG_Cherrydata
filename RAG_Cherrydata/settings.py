@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 from pathlib import Path
 from dotenv import load_dotenv
 import os
+# from . import dbrouters
 # Python-dotenv reads key-value pairs from a .env file and can set them as environment variables.
 load_dotenv()
 
@@ -42,6 +43,7 @@ INSTALLED_APPS = [
     'django_filters', # Used with DRF
     'rest_framework', # DRF package
     'core', # New app
+    "clickhouse_backend",
 ]
 
 MIDDLEWARE = [
@@ -82,8 +84,16 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
+    },
+    "clickhouse": {
+        "ENGINE": "clickhouse_backend.backend",
+        "NAME": "default",
+        "HOST": "localhost",
+        "USER": "",
+        "PASSWORD": "",
     }
 }
+DATABASE_ROUTERS = ["dbrouters.ClickHouseRouter"]
 
 
 # Password validation
