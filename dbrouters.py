@@ -19,7 +19,7 @@ class ClickHouseRouter:
             if model._meta.abstract:
                 continue
             self.route_model_names.add(model._meta.label_lower)
-        print(f"self.route_model_names: {self.route_model_names}")
+        #print(f"self.route_model_names: {self.route_model_names}")
 
     def db_for_read(self, model, **hints):
         if (model._meta.label_lower in self.route_model_names

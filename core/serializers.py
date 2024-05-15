@@ -16,6 +16,8 @@ class DatasetSerializer(serializers.ModelSerializer):
     class Meta:
         model = Dataset
         fields = (
+            'created',
+            'modified',
             'path',
             'clickhouse_table_name',
             'clickhouse_db_name',
@@ -36,6 +38,7 @@ class DataQuerySerializer(serializers.ModelSerializer):
     class Meta:
         model = DataQuery
         fields = (
+            'created',
             'dataset',
             'user_prompt',
             'command_query',
