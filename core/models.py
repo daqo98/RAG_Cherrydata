@@ -52,7 +52,7 @@ class DataQuery(Model):
     user_prompt = models.StringField(null=False)
     command_query = models.StringField(null=False)
     # command_chart = models.FixedStringField(max_bytes=200)
-    chart_type = models.FixedStringField(max_bytes=10, default="pie")
+    chart_type = models.FixedStringField(max_bytes=50, default="pie")
     request_status = models.FixedStringField(max_bytes=10, choices=settings.REQUEST_STATUS_CHOICES)
 
     def __str__(self):

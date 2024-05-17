@@ -32,6 +32,7 @@ class DataQuerySerializer(serializers.ModelSerializer):
         slug_field="clickhouse_table_name", 
         many=False
         )
+    chart_type = CharField(required=False)
     command_query = CharField(required=False)
     request_status = ChoiceField(choices=settings.REQUEST_STATUS_CHOICES, required=False)
 
