@@ -6,6 +6,7 @@ from rest_framework.parsers import JSONParser
 from rest_framework import views, status
 from rest_framework.response import Response
 from .models import Dataset
+from .tasks import send_query_clickhouse_task
 from utils.chat_gpt import ChatGPTHandler
 
 class DatasetAPIView(views.APIView):
@@ -65,7 +66,7 @@ class DataQueryAPIView(views.APIView):
 
                 # TODO: Clickhouse query using Celery job - I should cache the id of the DataQueryRequest
                 # in order to update the request status asynchronosuly
- 
+                send_query_clickhouse_task.apply_async(args=[])
                 return Response(serializer.data)
             else:
                 print(f"serializer errors {serializer.errors}")

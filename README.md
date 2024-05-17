@@ -24,5 +24,25 @@ Python 3.11 (Ubuntu: Install it using pyenv), pip, pipenv
 
 ## Clickhouse DB setup
 
+
+## Celery - Async task processing
+Follow this tutorial: [https://realpython.com/asynchronous-tasks-with-django-and-celery/].
+
+1. Install a message broker e.g. Redis or RabbitMQ. Let's use Redis [https://redis.io/docs/latest/operate/oss_and_stack/install/install-stack/linux/]. Version used: redis-stack-server_7.2.0-v10_amd64.deb.
+
+2. In a terminal window run `redis-server`.
+3. In another terminal run `redis-cli` and on it run `ping`.
+
+
+Run the Django's web app development server, the redis-server and Celery:
+
+```
+python manage.py runserver
+redis-server 
+python -m celery -A RAG_Cherrydata worker
+python -m celery -A RAG_Cherrydata worker -l info
+```
+You need to restart the Celery worker every time you modify the task code because it loads it into memory.
+
 ## Endpoints
 [WIP] [Swagger][https://swagger.io/] 
