@@ -44,6 +44,7 @@ class DataQueryAPIView(views.APIView):
         return self.serializer_class(*args, **kwargs)
 
     def post(self, request):
+         # Get the ID from the request data
         
         try:
             data = JSONParser().parse(request)
@@ -54,19 +55,20 @@ class DataQueryAPIView(views.APIView):
                 # Extract the prompt from the request data and call Chat-GPT
                 user_prompt = data.get("user_prompt", "")
                 chat_gpt_handler = ChatGPTHandler(user_prompt)
-                data["chart_type"] = getattr(chat_gpt_handler,"chart_type")
+                data["chart_type"] = getattr(chat_gpt_handler,"chart_type") #TODO
+                # SUBMITTED
                 data["request_status"] = list(settings.REQUEST_STATUS_CHOICES.keys())[0]
-                data["command_query"] = "[Insert Clickhouse query]" # chat_gpt_handler.generate_response()
+                data["command_query"] = "SELECT max(key), avg(metric) FROM new_table" # chat_gpt_handler.generate_response()
 
                 
                 serializer = DataQuerySerializer(data=data)
                 if serializer.is_valid(raise_exception=True):
-                    serializer.save()
+                    instance = serializer.save()
                 #print(f"serializer data {serializer.data}")
 
                 # TODO: Clickhouse query using Celery job - I should cache the id of the DataQueryRequest
                 # in order to update the request status asynchronosuly
-                send_query_clickhouse_task.apply_async(args=[])
+                task = send_query_clickhouse_task.apply_async(args=(instance.id, instance.command_query))
                 return Response(serializer.data)
             else:
                 print(f"serializer errors {serializer.errors}")
