@@ -9,11 +9,11 @@ class Model(models.ClickhouseModel):
     class Meta:
         abstract = True # to inherit from it on other Model classes
 
-class Chart(models.ClickhouseModel):
+class Chart(Model):
     title_xaxis = models.FixedStringField(max_bytes=50)
     title_yaxis = models.FixedStringField(max_bytes=50)
-    #data_xaxis = models.ListField(models.FloatField())
-    #data_yaxis = models.ArrayField(models.TextField(null=false))
+    data_xaxis = models.ArrayField(base_field=models.Float64Field(), default=list)
+    data_yaxis = models.ArrayField(base_field=models.Float64Field(), default=list)
 
     class Meta:
         abstract = True

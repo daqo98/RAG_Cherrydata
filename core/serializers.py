@@ -1,4 +1,4 @@
-from .models import Dataset, DataQuery, Insight
+from .models import Dataset, DataQuery, Insight, DynamicChart
 from rest_framework import serializers
 from rest_framework.fields import CharField, EmailField, ListField, ChoiceField, BooleanField
 from collections import OrderedDict
@@ -69,3 +69,25 @@ class InsightSerializer(serializers.ModelSerializer):
             'gpt_response',
             'request_status',
         )
+
+class DynamicChartSerializer(serializers.ModelSerializer):
+
+    data_query = serializers.PrimaryKeyRelatedField(queryset=DataQuery.objects.all(), many=False)
+    
+    class Meta:
+        model = DynamicChart
+        fields = (
+            'data_query',
+            'title_xaxis',
+            'title_yaxis',
+            'data_xaxis',
+            'data_yaxis',
+            'chart_type',
+            'is_saved',
+        )
+        
+        
+        
+        #'__all__'
+        
+    

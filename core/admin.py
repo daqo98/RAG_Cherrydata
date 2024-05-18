@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Dataset, DataQuery, Insight
+from .models import Dataset, DataQuery, Insight, DynamicChart
 
 
 @admin.register(Dataset)
@@ -28,4 +28,17 @@ class InsightAdmin(admin.ModelAdmin):
             'activate_context',
             'gpt_response',
             'request_status',
+        )
+
+@admin.register(DynamicChart)
+class DynamicChartAdmin(admin.ModelAdmin):
+    list_display = (
+            'id',
+            'data_query',
+            'title_xaxis',
+            'title_yaxis',
+            'data_xaxis',
+            'data_yaxis',
+            'chart_type',
+            'is_saved',
         )

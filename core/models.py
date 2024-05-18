@@ -51,7 +51,6 @@ class DataQuery(Model):
     dataset = django_models.ForeignKey(Dataset, on_delete=django_models.CASCADE)
     user_prompt = models.StringField(null=False)
     command_query = models.StringField(null=False)
-    # command_chart = models.FixedStringField(max_bytes=200)
     chart_type = models.FixedStringField(max_bytes=50, default="pie")
     request_status = models.FixedStringField(max_bytes=10, choices=settings.REQUEST_STATUS_CHOICES)
 
@@ -105,14 +104,14 @@ class StaticChart(Chart):
         return f'{self.id}'#TODO: List of graphs
 
 class DynamicChart(Chart):
-
+    # TODO: Reverse relation w/ DataQuery
     data_query = django_models.OneToOneField(
         DataQuery,
         on_delete=django_models.CASCADE,
         primary_key=False,
     )
 
-    chart_type = models.FixedStringField(max_bytes=10)
+    chart_type = models.FixedStringField(max_bytes=50)
     is_saved = models.BoolField()
 
     def __str__(self):

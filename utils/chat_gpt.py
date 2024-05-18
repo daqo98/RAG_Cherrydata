@@ -4,18 +4,19 @@ import openai
 
 openai.api_key = settings.OPENAI_API_KEY
 
+CHARTS = ["pie chart","bubble chart", "whiskers", "scatter plot", "box-plot",
+        "box and whisker plot", "line graph", "bar chart", "area graph", "histogram", "heatmap"]
 
 class ChatGPTHandler:
     def __init__(self, _user_prompt):
-        self.user_prompt = _user_prompt
-        self.chart_type = self.parse()
+        self.user_prompt = self.remove_extra_spaces(_user_prompt.lower())
+        self.chart_type = self.extract_chart_type()
 
+    def remove_extra_spaces(self, input_string):
+        return ' '.join(input_string.split())
 
-    def parse(self):
-        charts = ["pie chart","bubble chart", "whiskers", "scatter", "box-plot",
-        "box and whisker plot", "line graph", "bar chart", "area graph", "histogram", "heatmap"]
-
-        chart_type = "placeholder"
+    def extract_chart_type(self):
+        chart_type = next((c for c in CHARTS if c in self.user_prompt), None) # "placeholder"
 
         return chart_type
 
