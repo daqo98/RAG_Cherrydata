@@ -27,5 +27,7 @@ urlpatterns += [
     path('admin/', admin.site.urls),
     path('dataset/', core_views.DatasetAPIView.as_view()),
     path('data-query/', core_views.DataQueryAPIView.as_view()),
-    path('insight-query/', core_views.InsightAPIView.as_view())
+    path('data-query/<str:pk>/', core_views.DataQueryAPIView.as_view()),
+    path('insight-query/', core_views.InsightAPIView.as_view()),
+    path('task-result/<str:task_id>/', core_views.TaskResultAPIView.as_view(), name='task-result'),
 ]

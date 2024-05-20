@@ -46,6 +46,7 @@ class DataQuerySerializer(serializers.ModelSerializer):
             'user_prompt',
             'command_query',
             'chart_type',
+            'task_id',
             'request_status',
         )
 

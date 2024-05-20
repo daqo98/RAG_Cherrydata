@@ -18,10 +18,11 @@ def send_query_clickhouse_task(self, request_id, query):
 
     # Update status to PROCESSING
     data_query_obj.request_status = list(settings.REQUEST_STATUS_CHOICES.keys())[1]
+    data_query_obj.task_id = self.request.id # Save Celery's task_id in data query object
     data_query_obj.save()
 
     try:
-        sleep(5)  # Simulate expensive operation(s) that freeze Django
+        sleep(15)  # Simulate expensive operation(s) that freeze Django
         client = clickhouse_connect.get_client(host="localhost", username="default", password="", database="helloworld")
         result = client.query(query)
 
@@ -35,6 +36,7 @@ def send_query_clickhouse_task(self, request_id, query):
         #print(result.result_rows)
 
         # Creation of DynamicChart object
+        # TODO: Check which columns to return as the x- and y-axis
         DynamicChart.objects.create(
             data_query=data_query_obj,
             title_xaxis="x",
@@ -45,13 +47,17 @@ def send_query_clickhouse_task(self, request_id, query):
             is_saved=False
             )
 
+        table_data = [{'column_name': v1, 'column_values': v2} for v1, v2 in zip(result.column_names, result.result_columns)]
+
+        return {'status': 'Task completed', 'result': table_data}
+
     except Exception as e:
         # Update status to FAILED
         data_query_obj.request_status = list(settings.REQUEST_STATUS_CHOICES.keys())[3]
         data_query_obj.save()
         print(e)
 
-    return {'status': 'Task completed', 'result': "DONEEEEE"}
+        return {'status': 'Task failed', 'result': e}
 
 
 def get_task_status(task_id):

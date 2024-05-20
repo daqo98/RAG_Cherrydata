@@ -1,13 +1,14 @@
-from json import JSONDecodeError
+from celery.result import AsyncResult
 from django.conf import settings
 from django.http import JsonResponse
-from .serializers import DatasetSerializer, DataQuerySerializer, InsightSerializer
+from json import JSONDecodeError
 from rest_framework.parsers import JSONParser
 from rest_framework import views, status
 from rest_framework.response import Response
-from .models import Dataset
-from .tasks import send_query_clickhouse_task
 from utils.chat_gpt import ChatGPTHandler
+from .models import Dataset, DataQuery
+from .serializers import DatasetSerializer, DataQuerySerializer, InsightSerializer, DynamicChartSerializer
+from .tasks import send_query_clickhouse_task
 
 class DatasetAPIView(views.APIView):
     """
@@ -43,9 +44,23 @@ class DataQueryAPIView(views.APIView):
         kwargs['context'] = self.get_serializer_context()
         return self.serializer_class(*args, **kwargs)
 
+    def get(self, request, pk, *args, **kwargs):
+        # Get the ID from the request data
+        data_query = DataQuery.objects.get(id=pk)
+        # Get the result using the Celery's task ID
+        task_id = str(data_query.task_id)
+        result = AsyncResult(task_id)
+
+        table_data = result.result
+        dyn_chart = DynamicChartSerializer(data_query.dynamicchart).data
+
+        if result.ready():
+            return Response({'result': table_data | dyn_chart}, status=status.HTTP_200_OK)
+        else:
+            return Response({'status': 'Pending'}, status=status.HTTP_202_ACCEPTED)
+
     def post(self, request):
-         # Get the ID from the request data
-        
+         
         try:
             data = JSONParser().parse(request)
             print(f"data is: {data}")
@@ -99,3 +114,12 @@ class InsightAPIView(views.APIView):
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except JSONDecodeError:
             return JsonResponse({"result": "error","message": "Json decoding error"}, status= 400)
+
+
+class TaskResultAPIView(views.APIView):
+    def get(self, request, task_id, *args, **kwargs):
+        result = AsyncResult(task_id)
+        if result.ready():
+            return Response({'result': result.result}, status=status.HTTP_200_OK)
+        else:
+            return Response({'status': 'Pending'}, status=status.HTTP_202_ACCEPTED)

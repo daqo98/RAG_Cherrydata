@@ -2,6 +2,7 @@ from django.conf import settings
 from django.db import models as django_models
 from clickhouse_backend import models
 from utils.model_abstracts import Model, Chart
+import uuid
 from django_extensions.db.models import (
 	TimeStampedModel, 
 	ActivatorModel,
@@ -53,6 +54,7 @@ class DataQuery(Model):
     command_query = models.StringField(null=False)
     chart_type = models.FixedStringField(max_bytes=50, default="pie")
     request_status = models.FixedStringField(max_bytes=10, choices=settings.REQUEST_STATUS_CHOICES)
+    task_id = models.UUIDField(default=uuid.uuid4)
 
     def __str__(self):
         return f'{self.id}'

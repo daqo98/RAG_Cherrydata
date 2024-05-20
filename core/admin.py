@@ -16,7 +16,15 @@ class DatasetAdmin(admin.ModelAdmin):
 
 @admin.register(DataQuery)
 class DataQueryAdmin(admin.ModelAdmin):
-    list_display = ('id', 'created', 'dataset', 'user_prompt', 'command_query', 'chart_type', 'request_status')
+    list_display = (
+        'id',
+        'created', 
+        'dataset', 
+        'user_prompt', 
+        'command_query', 
+        'chart_type',
+        'task_id', 
+        'request_status')
 
 @admin.register(Insight)
 class InsightAdmin(admin.ModelAdmin):
