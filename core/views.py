@@ -4,9 +4,10 @@ from django.http import JsonResponse
 from json import JSONDecodeError
 from rest_framework.parsers import JSONParser
 from rest_framework import views, status
+from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
 from utils.chat_gpt import ChatGPTHandler
-from .models import Dataset, DataQuery
+from .models import Dataset, DataQuery, DynamicChart
 from .serializers import DatasetSerializer, DataQuerySerializer, InsightSerializer, DynamicChartSerializer
 from .tasks import send_query_clickhouse_task
 
@@ -116,6 +117,28 @@ class InsightAPIView(views.APIView):
             return JsonResponse({"result": "error","message": "Json decoding error"}, status= 400)
 
 
+class PersonalDashboardAPIView(views.APIView):
+    """
+    A simple APIView for obtaining the saved Dynamic Charts.
+    """
+    serializer_class = DynamicChartSerializer
+
+    def get(self, request, *args, **kwargs):
+
+        try:
+            dyn_chart = DynamicChart.objects.filter(is_saved=False)
+            print(f"dyn_chart: {dyn_chart}")
+            serializer = DynamicChartSerializer(dyn_chart, many=True)
+
+            print(f"serializer.data is: {serializer.data}")
+
+            return Response(serializer.data)
+
+        except DynamicChart.DoesNotExist:
+            raise NotFound(detail="No dynamic chart has been saved")
+            #return Response(serializer.errors, status=status.HTTP_404_NOT_FOUND)
+
+
 class TaskResultAPIView(views.APIView):
     def get(self, request, task_id, *args, **kwargs):
         result = AsyncResult(task_id)
@@ -123,3 +146,4 @@ class TaskResultAPIView(views.APIView):
             return Response({'result': result.result}, status=status.HTTP_200_OK)
         else:
             return Response({'status': 'Pending'}, status=status.HTTP_202_ACCEPTED)
+

@@ -49,7 +49,7 @@ def send_query_clickhouse_task(self, request_id, query):
 
         table_data = [{'column_name': v1, 'column_values': v2} for v1, v2 in zip(result.column_names, result.result_columns)]
 
-        return {'status': 'Task completed', 'result': table_data}
+        return {'status': 'Task completed', 'table_data': table_data}
 
     except Exception as e:
         # Update status to FAILED
