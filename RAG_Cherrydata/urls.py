@@ -29,6 +29,7 @@ urlpatterns += [
     path('data-query/', core_views.DataQueryAPIView.as_view()),
     path('data-query/<str:pk>/', core_views.DataQueryAPIView.as_view()),
     path('insight-query/', core_views.InsightAPIView.as_view()),
-    path('personal_dashboard/', core_views.PersonalDashboardAPIView.as_view()),
+    path('insight-query/<str:pk>/', core_views.InsightAPIView.as_view()),
+    path('personal-dashboard/', core_views.PersonalDashboardAPIView.as_view()),
     path('task-result/<str:task_id>/', core_views.TaskResultAPIView.as_view(), name='task-result'),
 ]

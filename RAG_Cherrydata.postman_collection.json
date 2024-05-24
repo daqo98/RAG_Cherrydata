@@ -1,0 +1,177 @@
+{
+	"info": {
+		"_postman_id": "7cc10f4c-9baa-46c5-b534-009089398834",
+		"name": "RAG_Cherrydata",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28784536"
+	},
+	"item": [
+		{
+			"name": "Add dataset",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"path\" : \"C://data\",\r\n    \"clickhouse_table_name\" : \"clients\",\r\n    \"clickhouse_db_name\" : \"supermarket\",\r\n    \"column_names\" : [\"Barilla\", \"Voiello\", \"De Cecco\", \"Rummo\", \"Garofalo\"]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/dataset/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"dataset",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Data query",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"dataset\" : \"providers\",\r\n    \"user_prompt\" : \"Show the purchases to providers from Lazio in a Scatter plot\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/data-query/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"data-query",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Data query",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/data-query/b01de69a-497a-49ea-9bab-41ee03dfaeda",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"data-query",
+						"b01de69a-497a-49ea-9bab-41ee03dfaeda"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Data insight",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"dataset\" : \"clients\",\r\n    \"user_prompt\" : \"What is the most popular product?\",\r\n    \"activate_context\": \"True\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/insight-query/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"insight-query",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Insight",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/insight-query/b521c4d8-8b09-4db5-92f5-5af95a369da1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"insight-query",
+						"b521c4d8-8b09-4db5-92f5-5af95a369da1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Personal dashboard",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/personal-dashboard/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"personal-dashboard",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Task result",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/task-result/c5bc9bd0-56fa-49ff-8826-cca01b3ae0dc",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"task-result",
+						"c5bc9bd0-56fa-49ff-8826-cca01b3ae0dc"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

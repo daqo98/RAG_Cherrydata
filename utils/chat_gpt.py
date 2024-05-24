@@ -10,7 +10,7 @@ CHARTS = ["pie chart","bubble chart", "whiskers", "scatter plot", "box-plot",
 class ChatGPTHandler:
     def __init__(self, _user_prompt):
         self.user_prompt = self.remove_extra_spaces(_user_prompt.lower())
-        self.chart_type = self.extract_chart_type()
+        #self.chart_type = self.extract_chart_type()
 
     def remove_extra_spaces(self, input_string):
         return ' '.join(input_string.split())
